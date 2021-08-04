@@ -1,0 +1,7 @@
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\bin\Release\cashes_activity.exe.config
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\bin\Release\cashes_activity.exe
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\bin\Release\cashes_activity.pdb
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\obj\Release\cashes_activity.csprojAssemblyReference.cache
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\obj\Release\cashes_activity.csproj.CoreCompileInputs.cache
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\obj\Release\cashes_activity.exe
+C:\Projects\cashes_activity\cashes_activity\cashes_activity\obj\Release\cashes_activity.pdb
