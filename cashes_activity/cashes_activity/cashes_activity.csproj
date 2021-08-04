@@ -42,8 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReadConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rkeeper_DB_Methods.cs" />
+    <Compile Include="WebReq.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
