@@ -78,7 +78,7 @@ namespace cashes_activity
                     //час когда мы его не смотрим, то потери от этого будут не велики, потому что в этот период оно почти не торгует
 
                     //и отбираем те строки, где за прошедший час где среднее колл-во транзакций по кассе в 2 и более раз больше чем за прошедший час
-                    "	where   xx.avg_tr > 1 and  xx.avg_tr/2 >= isnull(yy.cur_cnt, 0)	 " 
+                    "	where   xx.avg_tr > 1 and  xx.avg_tr/2 > isnull(yy.cur_cnt, 0)	 " 
 
                 , string.Format("uid=sa;pwd={0};Initial Catalog=rk7;Data Source={1}"
                 , Dict_rest[rests[i]][0]
