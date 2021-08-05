@@ -13,7 +13,9 @@ namespace cashes_activity
         {
             string[] restCredensials = ReadConfig.ReadRestrauntsData();
 
-            DataTable dt = Rkeeper_DB_Methods.getSuspicionCashes(restCredensials);
+            string expl = ReadConfig.ReadCashesRetroExclude();
+
+            DataTable dt = Rkeeper_DB_Methods.getSuspicionCashes(restCredensials, expl);
 
             string alarm_data = "";
 

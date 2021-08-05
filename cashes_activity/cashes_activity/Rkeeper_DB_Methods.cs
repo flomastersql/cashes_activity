@@ -7,7 +7,7 @@ namespace cashes_activity
 {
     class Rkeeper_DB_Methods
     {
-        public static DataTable getSuspicionCashes(string[] RestCredData)
+        public static DataTable getSuspicionCashes(string[] RestCredData, string CashesExclude)
         {
             Dictionary<string, string[]> Dict_rest = new Dictionary<string, string[]>();
             List<string> rests = new List<string>();
@@ -31,8 +31,8 @@ namespace cashes_activity
                     //отбираем назавние реторана из текстового конфига, название кассового места (клик подставляем в ручную, т.к. в cashes он указан как касса
                     //показываем среднее кол-во транзакций по кассовому месте и реально за прошедший час и также показываем время последней транзакции
                     //за прошедший час
-                    "	select '" + rests[i] + " ' + case when (c.NAME like '%kio%' or c.NAME like '%кио%') then c.NAME else 'Касса CLC' end cash,  xx.avg_tr, yy.cur_cnt	 " +
-                    "	, convert(varchar, yy.max_t_check, 102) + ' ' + convert(varchar, yy.max_t_check, 108) t from (	 " +
+                    "	select '" + rests[i] + " ' + case when (c.NAME like '%kio%' or c.NAME like '%кио%') then c.NAME else 'Касса CLC' end cash,  xx.avg_tr,  isnull(yy.cur_cnt, 0) cur_cnt	 " +
+                    "	, isnull((convert(varchar, yy.max_t_check, 102) + ' ' + convert(varchar, yy.max_t_check, 108)), 'pzdc как давно уже') t from (	 " +
                     //получение среднего кол-ва транзакций по каждому кассовому месту за выбранный час в разрезе 30 дней
                     //учитывая те дни когда они в этот час не торговали (забито нулями, см **) - НАЧАЛО                                                        ***
                     "	select z.sifr, SUBSTRING(z.t, 1, 2) h, avg(z.cnt) avg_tr from(	 " +
@@ -64,7 +64,7 @@ namespace cashes_activity
                     "   group by z.sifr, SUBSTRING(z.t, 1, 2) )xx 	 " +
                     //получение среднего кол-ва транзакций по каждому кассовому месту за выбранный час в разрезе 30 дней
                     //учитывая те дни когда они в этот час не торговали (забито нулями, см **) - КОНЕЦ                                                        ***
-                    "	join (	 " +
+                    "	left join (	 " +
                     //Присоединяем по ID касс кол-во транзакций по кассовым местам за прошедший час - НАЧАЛО
                     "	 select ICLOSESTATION, count(*) cur_cnt, max(CLOSEDATETIME) max_t_check from PRINTCHECKS where	 " +
                     "	    SUBSTRING(CONVERT(varchar, CLOSEDATETIME, 108), 1, 2) +' ' + CONVERT(varchar, CLOSEDATETIME, 101) =	 " +
@@ -73,12 +73,12 @@ namespace cashes_activity
                     "	)yy on xx.SIFR = yy.ICLOSESTATION	 " +
                     //Присоединяем по ID касс кол-во транзакций по кассовым местам за прошедший час - КОНЕЦ
                     //присоединяем таблицу касс, чтобы вывести их название в отчете вверху запроса
-                    "	join CASHES c on c.SIFR = xx.SIFR 	 " +
+                    "	join CASHES c on c.SIFR = xx.SIFR  left join (" + CashesExclude + ")xxx on c.NAME = xxx.name and xxx.t > GETDATE() " +
                     //отбираем для отчета только те кассовые месте у которых транзакций больше одной (предполагается что если даже кассовое место завалится в этот
                     //час когда мы его не смотрим, то потери от этого будут не велики, потому что в этот период оно почти не торгует
 
                     //и отбираем те строки, где за прошедший час где среднее колл-во транзакций по кассе в 2 и более раз больше чем за прошедший час
-                    "	where   xx.avg_tr > 1 and  xx.avg_tr/2 > isnull(yy.cur_cnt, 0)	 " 
+                    "	where   xx.avg_tr > 1 and  xx.avg_tr/2 > isnull(yy.cur_cnt, 0) and xxx.name is null 	 "
 
                 , string.Format("uid=sa;pwd={0};Initial Catalog=rk7;Data Source={1}"
                 , Dict_rest[rests[i]][0]
